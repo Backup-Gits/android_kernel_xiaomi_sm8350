@@ -1081,10 +1081,10 @@ static int a6xx_gmu_gfx_rail_on(struct adreno_device *adreno_dev)
 {
 	struct kgsl_device *device = KGSL_DEVICE(adreno_dev);
 	struct kgsl_pwrctrl *pwr = &device->pwrctrl;
-	struct a6xx_gmu_device *gmu = to_a6xx_gmu(adreno_dev);
-	u32 perf_idx = gmu->hfi.dcvs_table.gpu_level_num -
-		pwr->default_pwrlevel - 1;
-	u32 default_opp = gmu->hfi.dcvs_table.gx_votes[perf_idx].vote;
+
+	struct gmu_device *gmu = KGSL_GMU_DEVICE(device);
+	unsigned int perf_idx = pwr->num_pwrlevels - 1;
+	uint32_t default_opp = gmu->rpmh_votes.gx_votes[perf_idx];
 
 	gmu_core_regwrite(device, A6XX_GMU_BOOT_SLUMBER_OPTION,
 			OOB_BOOT_OPTION);
@@ -1743,10 +1743,9 @@ static int a6xx_gmu_notify_slumber(struct adreno_device *adreno_dev)
 {
 	struct kgsl_device *device = KGSL_DEVICE(adreno_dev);
 	struct kgsl_pwrctrl *pwr = &device->pwrctrl;
-	struct a6xx_gmu_device *gmu = to_a6xx_gmu(adreno_dev);
-	int bus_level = pwr->pwrlevels[pwr->default_pwrlevel].bus_freq;
-	int perf_idx = gmu->hfi.dcvs_table.gpu_level_num -
-			pwr->default_pwrlevel - 1;
+	struct gmu_device *gmu = KGSL_GMU_DEVICE(device);
+	int bus_level = pwr->pwrlevels[pwr->num_pwrlevels - 1].bus_freq;
+	int perf_idx = gmu->num_gpupwrlevels - 1;
 	int ret, state;
 
 	/* Disable the power counter so that the GMU is not busy */

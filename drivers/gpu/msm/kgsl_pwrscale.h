@@ -59,6 +59,7 @@ struct kgsl_pwrscale {
 	struct work_struct devfreq_resume_ws;
 	struct work_struct devfreq_notify_ws;
 	ktime_t next_governor_call;
+	struct kgsl_pwr_history history[KGSL_PWREVENT_MAX];
 	struct thermal_cooling_device *cooling_dev;
 	bool ctxt_aware_enable;
 	unsigned int ctxt_aware_target_pwrlevel;
