@@ -1491,12 +1491,7 @@ static int _sde_encoder_resource_control_helper(struct drm_encoder *drm_enc,
 
 		/* enable all the irq */
 		sde_encoder_irq_control(drm_enc, true);
-
-		_sde_encoder_pm_qos_add_request(drm_enc);
-
 	} else {
-		_sde_encoder_pm_qos_remove_request(drm_enc);
-
 		/* disable all the irq */
 		sde_encoder_irq_control(drm_enc, false);
 
