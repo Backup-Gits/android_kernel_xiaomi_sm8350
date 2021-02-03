@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
- * Copyright (C) 2020 XiaoMi, Inc.
  */
-#define DEBUG
 #include <linux/slab.h>
 #include <linux/kthread.h>
 #include <linux/kernel.h>
@@ -27,7 +25,7 @@
 #include <dsp/voice_mhi.h>
 #include <soc/qcom/secure_buffer.h>
 
-#define TIMEOUT_MS 1000
+#define TIMEOUT_MS 300
 
 
 #define CMD_STATUS_SUCCESS 0
@@ -3947,19 +3945,19 @@ static int voice_unmap_cal_memory(int32_t cal_type,
 					__func__, v->session_id, result2);
 
 				result = result2;
-			} else {
-				if (cal_type == CVP_VOCPROC_DYNAMIC_CAL_TYPE)
-					voice_send_cvp_deregister_vol_cal_cmd(v);
-				else if (cal_type == CVP_VOCPROC_STATIC_CAL_TYPE)
-					voice_send_cvp_deregister_cal_cmd(v);
-				else if (cal_type == CVP_VOCDEV_CFG_CAL_TYPE)
-					voice_send_cvp_deregister_dev_cfg_cmd(v);
-				else if (cal_type == CVS_VOCSTRM_STATIC_CAL_TYPE)
-					voice_send_cvs_deregister_cal_cmd(v);
-				else
-					pr_err("%s: Invalid cal type %d!\n",
-						__func__, cal_type);
 			}
+
+			if (cal_type == CVP_VOCPROC_DYNAMIC_CAL_TYPE)
+				voice_send_cvp_deregister_vol_cal_cmd(v);
+			else if (cal_type == CVP_VOCPROC_STATIC_CAL_TYPE)
+				voice_send_cvp_deregister_cal_cmd(v);
+			else if (cal_type == CVP_VOCDEV_CFG_CAL_TYPE)
+				voice_send_cvp_deregister_dev_cfg_cmd(v);
+			else if (cal_type == CVS_VOCSTRM_STATIC_CAL_TYPE)
+				voice_send_cvs_deregister_cal_cmd(v);
+			else
+				pr_err("%s: Invalid cal type %d!\n",
+					__func__, cal_type);
 
 			result2 = voice_send_start_voice_cmd(v);
 			if (result2) {

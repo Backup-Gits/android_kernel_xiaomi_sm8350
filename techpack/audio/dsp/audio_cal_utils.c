@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2014-2020, The Linux Foundation. All rights reserved.
- * Copyright (C) 2020 XiaoMi, Inc.
  */
 #include <linux/slab.h>
 #include <linux/fs.h>
@@ -1093,8 +1092,6 @@ int __init cal_utils_init(void)
  * cal_utils_is_cal_stale
  *
  * @cal_block: pointer to cal block
- *
- * @cal_type: pointer to the cal type
  *
  * Returns true if cal block is stale, false otherwise
  */

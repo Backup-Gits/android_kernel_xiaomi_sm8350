@@ -27,8 +27,6 @@
 #include "internal.h"
 #include "asoc/bolero-slave-internal.h"
 
-#define WCD9370_VARIANT 0
-#define WCD9375_VARIANT 5
 #define WCD937X_VARIANT_ENTRY_SIZE 32
 
 #define NUM_SWRS_DT_PARAMS 5
@@ -1999,92 +1997,6 @@ static const char * const rx_hph_mode_mux_text[] = {
 	"CLS_H_ULP", "CLS_AB_HIFI",
 };
 
-const char * const tx_master_ch_text[] = {
-	"ZERO", "SWRM_TX1_CH1", "SWRM_TX1_CH2", "SWRM_TX1_CH3", "SWRM_TX1_CH4",
-	"SWRM_TX2_CH1", "SWRM_TX2_CH2", "SWRM_TX2_CH3", "SWRM_TX2_CH4",
-	"SWRM_TX3_CH1", "SWRM_TX3_CH2", "SWRM_TX3_CH3", "SWRM_TX3_CH4",
-	"SWRM_PCM_IN",
-};
-
-const struct soc_enum tx_master_ch_enum =
-	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(tx_master_ch_text),
-					tx_master_ch_text);
-
-static void wcd937x_tx_get_slave_ch_type_idx(const char *wname, int *ch_idx)
-{
-	u8 ch_type = 0;
-
-	if (strnstr(wname, "ADC1", sizeof("ADC1")))
-		ch_type = ADC1;
-	else if (strnstr(wname, "ADC2", sizeof("ADC2")))
-		ch_type = ADC2;
-	else if (strnstr(wname, "ADC3", sizeof("ADC3")))
-		ch_type = ADC3;
-	else if (strnstr(wname, "DMIC0", sizeof("DMIC0")))
-		ch_type = DMIC0;
-	else if (strnstr(wname, "DMIC1", sizeof("DMIC1")))
-		ch_type = DMIC1;
-	else if (strnstr(wname, "MBHC", sizeof("MBHC")))
-		ch_type = MBHC;
-	else if (strnstr(wname, "DMIC2", sizeof("DMIC2")))
-		ch_type = DMIC2;
-	else if (strnstr(wname, "DMIC3", sizeof("DMIC3")))
-		ch_type = DMIC3;
-	else if (strnstr(wname, "DMIC4", sizeof("DMIC4")))
-		ch_type = DMIC4;
-	else if (strnstr(wname, "DMIC5", sizeof("DMIC5")))
-		ch_type = DMIC5;
-	else
-		pr_err("%s: ch name: %s is not listed\n", __func__, wname);
-
-	if (ch_type)
-		*ch_idx = wcd937x_slave_get_slave_ch_val(ch_type);
-	else
-		*ch_idx = -EINVAL;
-}
-
-static int wcd937x_tx_master_ch_get(struct snd_kcontrol *kcontrol,
-					struct snd_ctl_elem_value *ucontrol)
-{
-	struct snd_soc_component *component =
-				snd_soc_kcontrol_component(kcontrol);
-	struct wcd937x_priv *wcd937x = snd_soc_component_get_drvdata(component);
-	int slave_ch_idx;
-
-	wcd937x_tx_get_slave_ch_type_idx(kcontrol->id.name, &slave_ch_idx);
-
-	if (slave_ch_idx != -EINVAL)
-		ucontrol->value.integer.value[0] =
-				wcd937x_slave_get_master_ch_val(
-				wcd937x->tx_master_ch_map[slave_ch_idx]);
-
-	dev_dbg(component->dev, "%s: ucontrol->value.integer.value[0] = %ld\n",
-			__func__, ucontrol->value.integer.value[0]);
-	return 0;
-}
-
-static int wcd937x_tx_master_ch_put(struct snd_kcontrol *kcontrol,
-					struct snd_ctl_elem_value *ucontrol)
-{
-	struct snd_soc_component *component =
-				snd_soc_kcontrol_component(kcontrol);
-	struct wcd937x_priv *wcd937x = snd_soc_component_get_drvdata(component);
-	int slave_ch_idx;
-
-	wcd937x_tx_get_slave_ch_type_idx(kcontrol->id.name, &slave_ch_idx);
-
-	dev_dbg(component->dev, "%s: slave_ch_idx: %d", __func__, slave_ch_idx);
-	dev_dbg(component->dev, "%s: ucontrol->value.enumerated.item[0] = %ld\n",
-			__func__, ucontrol->value.enumerated.item[0]);
-
-	if (slave_ch_idx != -EINVAL)
-		wcd937x->tx_master_ch_map[slave_ch_idx] =
-				wcd937x_slave_get_master_ch(
-					ucontrol->value.enumerated.item[0]);
-
-	return 0;
-}
-
 static const char * const wcd937x_tx_ch_pwr_level_text[] = {
 	"L0", "L1", "L2", "L3",
 };
@@ -2125,26 +2037,6 @@ static const struct snd_kcontrol_new wcd937x_snd_controls[] = {
 			analog_gain),
 	SOC_SINGLE_TLV("ADC3 Volume", WCD937X_ANA_TX_CH3, 0, 20, 0,
 			analog_gain),
-	SOC_ENUM_EXT("ADC1 ChMap", tx_master_ch_enum,
-			wcd937x_tx_master_ch_get, wcd937x_tx_master_ch_put),
-	SOC_ENUM_EXT("ADC2 ChMap", tx_master_ch_enum,
-			wcd937x_tx_master_ch_get, wcd937x_tx_master_ch_put),
-	SOC_ENUM_EXT("ADC3 ChMap", tx_master_ch_enum,
-			wcd937x_tx_master_ch_get, wcd937x_tx_master_ch_put),
-	SOC_ENUM_EXT("DMIC0 ChMap", tx_master_ch_enum,
-			wcd937x_tx_master_ch_get, wcd937x_tx_master_ch_put),
-	SOC_ENUM_EXT("DMIC1 ChMap", tx_master_ch_enum,
-			wcd937x_tx_master_ch_get, wcd937x_tx_master_ch_put),
-	SOC_ENUM_EXT("MBHC ChMap", tx_master_ch_enum,
-			wcd937x_tx_master_ch_get, wcd937x_tx_master_ch_put),
-	SOC_ENUM_EXT("DMIC2 ChMap", tx_master_ch_enum,
-			wcd937x_tx_master_ch_get, wcd937x_tx_master_ch_put),
-	SOC_ENUM_EXT("DMIC3 ChMap", tx_master_ch_enum,
-			wcd937x_tx_master_ch_get, wcd937x_tx_master_ch_put),
-	SOC_ENUM_EXT("DMIC4 ChMap", tx_master_ch_enum,
-			wcd937x_tx_master_ch_get, wcd937x_tx_master_ch_put),
-	SOC_ENUM_EXT("DMIC5 ChMap", tx_master_ch_enum,
-			wcd937x_tx_master_ch_get, wcd937x_tx_master_ch_put),
 	SOC_ENUM_EXT("TX CH1 PWR", wcd937x_tx_ch_pwr_level_enum,
 		wcd937x_tx_ch_pwr_level_get, wcd937x_tx_ch_pwr_level_put),
 	SOC_ENUM_EXT("TX CH3 PWR", wcd937x_tx_ch_pwr_level_enum,
@@ -2602,6 +2494,30 @@ static ssize_t wcd937x_variant_read(struct snd_info_entry *entry,
 static struct snd_info_entry_ops wcd937x_variant_ops = {
 	.read = wcd937x_variant_read,
 };
+
+/*
+ * wcd937x_get_codec_variant
+ * @component: component instance
+ *
+ * Return: codec variant or -EINVAL in error.
+ */
+int wcd937x_get_codec_variant(struct snd_soc_component *component)
+{
+	struct wcd937x_priv *priv = NULL;
+
+	if (!component)
+		return -EINVAL;
+
+	priv = snd_soc_component_get_drvdata(component);
+	if (!priv) {
+		dev_err(component->dev,
+			"%s:wcd937x not probed\n", __func__);
+		return -EINVAL;
+	}
+
+	return priv->variant;
+}
+EXPORT_SYMBOL(wcd937x_get_codec_variant);
 
 /*
  * wcd937x_info_create_codec_entry - creates wcd937x module
