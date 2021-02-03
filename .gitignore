@@ -157,6 +157,7 @@ arch/arm/boot/dts/vendor
 # Build script garbage
 kernel.log
 *.zip
+*.img
 tmp
 
 # Output dir
