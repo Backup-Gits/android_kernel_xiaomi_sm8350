@@ -28,6 +28,7 @@
 static bool screen_on = true;
 // Use 1 instead of 0 to allow thread interrupts
 #define SOFF_WAIT_MS 1
+static struct wakeup_source *gc_wakelock;
 
 static inline void gc_set_wakelock(struct f2fs_sb_info *sbi,
 		struct f2fs_gc_kthread *gc_th, bool val)
@@ -198,7 +199,7 @@ int f2fs_start_gc_thread(struct f2fs_sb_info *sbi)
 
 	snprintf(buf, sizeof(buf), "f2fs_gc-%u:%u", MAJOR(dev), MINOR(dev));
 
-	wakeup_source_init(&gc_th->gc_wakelock, buf);
+	gc_wakelock = wakeup_source_register(NULL, buf);
 
 	sbi->gc_thread = gc_th;
 	init_waitqueue_head(&sbi->gc_thread->gc_wait_queue_head);
@@ -218,7 +219,7 @@ void f2fs_stop_gc_thread(struct f2fs_sb_info *sbi)
 	if (!gc_th)
 		return;
 	kthread_stop(gc_th->f2fs_gc_task);
-	wakeup_source_trash(&gc_th->gc_wakelock);
+	wakeup_source_unregister(&gc_th->gc_wakelock);
 	kvfree(gc_th);
 	sbi->gc_mode = GC_NORMAL;
 	sbi->gc_thread = NULL;
