@@ -5287,7 +5287,6 @@ void sde_dbg_ctrl(const char *name, ...)
 	va_end(args);
 }
 
-
 /*
  * sde_dbg_debugfs_open - debugfs open handler for evtlog dump
  * @inode: debugfs inode

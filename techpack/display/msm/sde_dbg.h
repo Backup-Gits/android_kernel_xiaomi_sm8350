@@ -470,5 +470,4 @@ static inline void sde_rsc_debug_dump(u32 mux_sel)
 
 #endif /* defined(CONFIG_DEBUG_FS) */
 
-
 #endif /* SDE_DBG_H_ */
