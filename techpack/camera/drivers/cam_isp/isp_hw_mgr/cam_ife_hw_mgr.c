@@ -664,7 +664,7 @@ static int cam_ife_hw_mgr_free_hw_res(
 
 	return 0;
 }
-
+/*
 static const char *cam_ife_hw_mgr_get_res_state(
 	uint32_t res_state)
 {
@@ -730,7 +730,7 @@ static const char *cam_ife_hw_mgr_get_src_res_id(
 	default:
 		return "INVALID";
 	}
-}
+} */
 
 static void cam_ife_hw_mgr_print_acquire_info(
 	struct cam_ife_hw_mgr_ctx *hw_mgr_ctx, uint32_t num_pix_port,
@@ -3514,7 +3514,7 @@ static int cam_ife_mgr_acquire(void *hw_mgr_priv,
 	CAM_DBG(CAM_ISP, "Exit...(rc=%d)", rc);
 	return rc;
 }
-
+/*
 static const char *cam_isp_util_usage_data_to_string(
 	uint32_t usage_data)
 {
@@ -3528,7 +3528,7 @@ static const char *cam_isp_util_usage_data_to_string(
 	default:
 		return "USAGE_INVALID";
 	}
-}
+} */
 
 static int cam_isp_classify_vote_info(
 	struct cam_isp_hw_mgr_res            *hw_mgr_res,

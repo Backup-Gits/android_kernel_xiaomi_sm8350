@@ -64,7 +64,7 @@ struct cam_sfe_path_data {
 	int                                       sof_eof_handle;
 	cam_hw_mgr_event_cb_func                  event_cb;
 };
-
+/*
 static const char *cam_sfe_top_res_id_to_string(
 	uint32_t res_id)
 {
@@ -84,7 +84,7 @@ static const char *cam_sfe_top_res_id_to_string(
 	default:
 		return "";
 	}
-}
+} */
 
 static struct cam_axi_vote *cam_sfe_top_delay_bw_reduction(
 	struct cam_sfe_top_priv *top_priv,
