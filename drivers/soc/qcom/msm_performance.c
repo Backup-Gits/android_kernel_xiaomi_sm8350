@@ -1137,7 +1137,6 @@ static const struct kernel_param_ops param_ops_splh_notification = {
 module_param_cb(splh_notif, &param_ops_splh_notification, &splh_notif, 0644);
 #endif /* CONFIG_QTI_PLH */
 
-#endif /* CONFIG_MSM_PERFORMANCE_QGKI */
 static int __init msm_performance_init(void)
 {
 #ifdef CONFIG_MSM_PERFORMANCE_QGKI
