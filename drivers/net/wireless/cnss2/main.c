@@ -2738,7 +2738,6 @@ static ssize_t fs_ready_store(struct device *dev,
 	return count;
 }
 
-<<<<<<< HEAD
 static ssize_t qdss_trace_start_store(struct device *dev,
 				      struct device_attribute *attr,
 				      const char *buf, size_t count)
@@ -2790,7 +2789,7 @@ static ssize_t hw_trace_override_store(struct device *dev,
 	cnss_pr_dbg("Received QDSS hw_trc_override indication\n");
 	return count;
 }
-=======
+
 static ssize_t data_stall_store(struct device *dev,
                               struct device_attribute *attr,
                               const char *buf, size_t count)
@@ -2810,7 +2809,6 @@ static ssize_t data_stall_store(struct device *dev,
 		    data_stall);
 	cnss_force_fw_assert(&pci_priv->pci_dev->dev);
 
->>>>>>> 875ed8e22ba3... drivers: net: wireless: Import Xiaomi changes
 	return count;
 }
 
