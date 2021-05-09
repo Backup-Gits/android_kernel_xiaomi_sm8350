@@ -486,28 +486,6 @@ static int __maybe_unused xhci_plat_runtime_suspend(struct device *dev)
 	return xhci_suspend(xhci, true);
 }
 
-static int xhci_plat_resume(struct device *dev)
-{
-	struct usb_hcd  *hcd = dev_get_drvdata(dev);
-	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
-	int ret;
-
-	if (!xhci)
-		return 0;
-
-	dev_dbg(dev, "xhci-plat resume\n");
-
-	ret = xhci_priv_resume_quirk(hcd);
-	if (ret)
-		return ret;
-
-	ret = pm_runtime_resume(dev);
-	if (ret)
-		dev_err(dev, "failed to resume xhci-plat (%d)\n", ret);
-
-	return ret;
-}
-
 static int __maybe_unused xhci_plat_runtime_resume(struct device *dev)
 {
 	struct usb_hcd  *hcd = dev_get_drvdata(dev);
