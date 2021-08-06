@@ -3,11 +3,11 @@
 # Resources
 THREAD="-j$(nproc --all)"
 
-export CLANG_PATH=/home/nakixii/toolchain/bin/
+export CLANG_PATH=/home/nakixii/toolchain/proton-clang/bin/
 export PATH=${CLANG_PATH}:${PATH}
 export CLANG_TRIPLE=aarch64-linux-gnu-
-export CROSS_COMPILE=/home/nakixii/toolchain/bin/aarch64-linux-gnu- CC=clang CXX=clang++
-export CROSS_COMPILE_COMPAT=/home/nakixii/toolchain/arm-eabi-gcc/bin/arm-eabi-
+export CROSS_COMPILE=/home/nakixii/toolchain/proton-clang/bin/aarch64-linux-gnu- CC=clang CXX=clang++
+export CROSS_COMPILE_COMPAT=/home/nakixii/toolchain/arm-none-eabi-gcc/bin/arm-none-eabi-
 
 DEFCONFIG="venus_defconfig"
 
@@ -43,3 +43,40 @@ DIFF=$(($DATE_END - $DATE_START))
 echo "Time: $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds."
 echo
 ls -a $ZIMAGE_DIR
+
+cd $KERNEL_DIR
+if grep -q "error: " kernel.log
+then
+	echo; echo; grep -n "error: " kernel.log; echo; echo
+	chown -R nakixii *
+	chgrp -R nakixii *
+	exit 0
+elif grep -q "undefined reference to" kernel.log
+then
+	echo; echo; grep -n "undefined reference to" kernel.log; echo; echo
+	chown -R nakixii *
+	chgrp -R nakixii *
+	exit 0
+elif grep -q "undefined symbol" kernel.log
+then
+	echo; echo; grep -n "undefined symbol" kernel.log; echo; echo
+	chown -R nakixii *
+	chgrp -R nakixii *
+	exit 0
+elif grep -q "Error 2" kernel.log
+then
+	exit 0
+else
+TIME="$(date "+%Y%m%d-%H%M%S")"
+mkdir -p tmp
+cp -fp $ZIMAGE_DIR/Image tmp
+cp -rp ./anykernel/* tmp
+cd tmp
+7za a -mx9 tmp.zip *
+cd ..
+rm DynamIQ*.zip
+cp -fp tmp/tmp.zip DynamIQ-Kernel-Mi11-$TIME.zip
+rm -rf tmp
+chown -R nakixii *
+chgrp -R nakixii *
+fi
