@@ -29,8 +29,8 @@ echo "Making Kernel:"
 echo "-------------------"
 echo
 
-make CC="ccache clang" CXX="ccache clang++" LD=ld.lld O=out $DEFCONFIG
-make CC="ccache clang" CXX="ccache clang++" LD=ld.lld O=out $THREAD 2>&1 | tee kernel.log
+make CC="ccache clang" CXX="ccache clang++" O=out $DEFCONFIG
+make CC="ccache clang" CXX="ccache clang++" O=out $THREAD 2>&1 | tee kernel.log
 
 echo
 echo "-------------------"
