@@ -21,6 +21,7 @@ msm-vidc-objs := vidc/msm_v4l2_vidc.o \
                 vidc/msm_vidc_bus_ar50lite.o\
                 vidc/msm_vidc_bus_iris2.o \
                 vidc/msm_vidc_buffer_calculations.o
+CFLAGS_vidc/hfi_iris2.o := $(call cc-disable-warning, pointer-to-int-cast)
 
 obj-$(CONFIG_MSM_VIDC_V4L2) := msm-vidc.o
 
