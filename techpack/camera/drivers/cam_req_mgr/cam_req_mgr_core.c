@@ -2913,7 +2913,7 @@ end:
  * @return   : String containing the device name
  *
  */
-static const char *__cam_req_mgr_dev_handle_to_name(
+__maybe_unused static const char *__cam_req_mgr_dev_handle_to_name(
 	int32_t dev_hdl, struct cam_req_mgr_core_link *link)
 {
 	struct cam_req_mgr_connected_device *dev = NULL;

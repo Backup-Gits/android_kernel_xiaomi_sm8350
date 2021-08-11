@@ -4592,7 +4592,7 @@ static int cam_csid_put_evt_payload(
 
 	return 0;
 }
-static char *cam_csid_status_to_str(uint32_t status)
+__maybe_unused static char *cam_csid_status_to_str(uint32_t status)
 {
 	switch (status) {
 	case CAM_IFE_CSID_IRQ_REG_TOP:

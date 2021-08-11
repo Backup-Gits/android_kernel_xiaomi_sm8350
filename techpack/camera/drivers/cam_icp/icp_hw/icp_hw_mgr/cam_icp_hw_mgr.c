@@ -96,7 +96,7 @@ static int cam_icp_dump_io_cfg(struct cam_icp_hw_ctx_data *ctx_data,
 	return rc;
 }
 
-static const char *cam_icp_dev_type_to_name(
+__maybe_unused static const char *cam_icp_dev_type_to_name(
 	uint32_t dev_type)
 {
 	switch (dev_type) {
