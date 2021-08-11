@@ -344,37 +344,6 @@ int pm_qos_request_active(struct pm_qos_request *req)
 }
 EXPORT_SYMBOL_GPL(pm_qos_request_active);
 
-int pm_qos_request_for_cpumask(int pm_qos_class, struct cpumask *mask)
-{
-	int cpu;
-	struct pm_qos_constraints *c = NULL;
-	int val;
-
-	spin_lock(&pm_qos_lock);
-	c = pm_qos_array[pm_qos_class]->constraints;
-	val = c->default_value;
-
-	for_each_cpu(cpu, mask) {
-
-		switch (c->type) {
-		case PM_QOS_MIN:
-			if (c->target_per_cpu[cpu] < val)
-				val = c->target_per_cpu[cpu];
-			break;
-		case PM_QOS_MAX:
-			if (c->target_per_cpu[cpu] > val)
-				val = c->target_per_cpu[cpu];
-			break;
-		default:
-			break;
-		}
-	}
-	spin_unlock(&pm_qos_lock);
-
-	return val;
-}
-EXPORT_SYMBOL(pm_qos_request_for_cpumask);
-
 static void __pm_qos_update_request(struct pm_qos_request *req,
 			   s32 new_value)
 {
@@ -661,9 +630,6 @@ static int __init pm_qos_power_init(void)
 	struct dentry *d;
 
 	BUILD_BUG_ON(ARRAY_SIZE(pm_qos_array) != PM_QOS_NUM_CLASSES);
-
-	/* Don't let userspace impose restrictions on CPU idle levels */
-	return 0;
 
 	d = debugfs_create_dir("pm_qos", NULL);
 

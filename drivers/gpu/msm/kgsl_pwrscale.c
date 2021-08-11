@@ -11,7 +11,6 @@
 #include "kgsl_pwrscale.h"
 #include "kgsl_trace.h"
 
-<<<<<<< HEAD
 static struct devfreq_msm_adreno_tz_data adreno_tz_data = {
 	.bus = {
 		.max = 350,
@@ -20,8 +19,6 @@ static struct devfreq_msm_adreno_tz_data adreno_tz_data = {
 	.mod_percent = 100,
 };
 
-=======
->>>>>>> 202358d3b096... msm: kgsl: Remove POPP
 /**
  * struct kgsl_midframe_info - midframe power stats sampling info
  * @timer - midframe sampling timer
@@ -259,25 +256,6 @@ void kgsl_pwrscale_enable(struct kgsl_device *device)
 		device->pwrscale.enabled = false;
 	}
 }
-<<<<<<< HEAD
-=======
-EXPORT_SYMBOL(kgsl_pwrscale_enable);
-
-static int _thermal_adjust(struct kgsl_pwrctrl *pwr, int level)
-{
-	if (level < pwr->active_pwrlevel)
-		return pwr->active_pwrlevel;
-
-	/*
-	 * A lower frequency has been recommended!  Stop thermal
-	 * cycling (but keep the upper thermal limit) and switch to
-	 * the lower frequency.
-	 */
-	pwr->thermal_cycle = CYCLE_ENABLE;
-	del_timer_sync(&pwr->thermal_timer);
-	return level;
-}
->>>>>>> 202358d3b096... msm: kgsl: Remove POPP
 
 #ifdef DEVFREQ_FLAG_WAKEUP_MAXFREQ
 static inline bool _check_maxfreq(u32 flags)
@@ -342,14 +320,7 @@ int kgsl_devfreq_target(struct device *dev, unsigned long *freq, u32 flags)
 		for (i = pwr->min_pwrlevel; (i >= pwr->max_pwrlevel
 					  && i <= pwr->min_pwrlevel); i--)
 			if (rec_freq <= pwr->pwrlevels[i].gpu_freq) {
-<<<<<<< HEAD
 				level = i;
-=======
-				if (pwr->thermal_cycle == CYCLE_ACTIVE)
-					level = _thermal_adjust(pwr, i);
-				else
-					level = i;
->>>>>>> 202358d3b096... msm: kgsl: Remove POPP
 				break;
 			}
 		if (level != pwr->active_pwrlevel)
@@ -813,9 +784,6 @@ int kgsl_pwrscale_init(struct kgsl_device *device, struct platform_device *pdev,
 	gpu_profile->profile.get_dev_status = kgsl_devfreq_get_dev_status;
 	gpu_profile->profile.get_cur_freq = kgsl_devfreq_get_cur_freq;
 
-	gpu_profile->profile.initial_freq =
-		pwr->pwrlevels[pwr->default_pwrlevel].gpu_freq;
-
 	gpu_profile->profile.polling_ms = 10;
 
 	pwr->nb.notifier_call = opp_notify;
@@ -824,14 +792,7 @@ int kgsl_pwrscale_init(struct kgsl_device *device, struct platform_device *pdev,
 
 	dev_pm_opp_register_notifier(&pdev->dev, &pwr->nb);
 
-<<<<<<< HEAD
 	srcu_init_notifier_head(&pwrscale->nh);
-=======
-	profile->initial_freq =
-		pwr->pwrlevels[pwr->num_pwrlevels - 1].gpu_freq;
-	/* Let's start with 10 ms and tune in later */
-	profile->polling_ms = 10;
->>>>>>> 202358d3b096... msm: kgsl: Remove POPP
 
 	for (i = 0; i < pwr->num_pwrlevels; i++)
 		pwrscale->freq_table[i] = pwr->pwrlevels[i].gpu_freq;
