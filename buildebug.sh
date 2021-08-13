@@ -16,7 +16,7 @@ KERNEL_DIR=`pwd`
 ZIMAGE_DIR="$KERNEL_DIR/out/arch/arm64/boot/"
 
 # Vars
-export LOCALVERSION=-R1
+export LOCALVERSION=-R1+
 export ARCH=arm64
 export SUBARCH=$ARCH
 export KBUILD_BUILD_USER=nakixii
