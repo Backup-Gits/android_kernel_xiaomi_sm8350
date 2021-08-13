@@ -516,6 +516,7 @@ export RCS_TAR_IGNORE := --exclude SCCS --exclude BitKeeper --exclude .svn \
 			 --exclude CVS --exclude .pc --exclude .hg --exclude .git
 
 KBUILD_CFLAGS	+= $(call cc-option,-Wno-misleading-indentation)
+KBUILD_CFLAGS	+= $(call cc-disable-warning, unused-result)
 
 # ===========================================================================
 # Rules shared between *config targets and build targets
